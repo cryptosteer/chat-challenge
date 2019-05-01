@@ -1,0 +1,52 @@
+{% extends 'adminlte/base.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/chat.css" %}">
+{% endblock %}
+
+{% block content_header %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-3">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Users</h3>
+                </div>
+                <div class="box-body no-padding">
+                    <ul class="nav nav-pills nav-stacked">
+                        {% for i in i|rjust:5 %}
+                        <li><a href="#"><i class="fa fa-user"></i> Jesus</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Chat room: </h3>
+                </div>
+                <div class="box-body msg-wrap">
+                    {% for i in i|rjust:5 %}
+                    <div class="media msg">
+                        <div class="media-body">
+                            <small class="pull-right time"><i class="fa fa-clock-o"></i> 12:10am</small>
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                            <small class="col">Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret #meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a meeting in the discussed how to go about this all fast and how eventually this will end."</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            <div class="send-wrap ">
+                <textarea class="form-control send-message" rows="3" placeholder="Write a reply..."></textarea>
+            </div>
+            <div class="btn-panel">
+                <a href="" class="col-lg-4 text-right btn send-message-btn pull-right" role="button"><i class="fa fa-send"></i> Send Message</a>
+            </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
