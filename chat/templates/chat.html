@@ -29,30 +29,80 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Chat room: {{ room.name }}</h3>
                 </div>
-                <div class="box-body msg-wrap">
-                    {% for post in posts reversed %}
-                    <div class="media msg">
-                        <div class="media-body">
-                            <small class="pull-right time"><i class="fa fa-clock-o"></i> {{ post.created }}</small>
-                            <h5 class="media-heading">{{ post.author }}</h5>
-                            <small class="col">{{ post.message }}</small>
-                        </div>
-                    </div>
-                    {% endfor %}
+                <div id="posts" class="box-body msg-wrap">
                 </div>
-            <form action="{% url 'post_message' %}" method="post">
-                {% csrf_token %}
                 <div class="send-wrap">
-                    <textarea name="message" class="form-control send-message" rows="3" placeholder="Write a reply..."></textarea>
-                    <input type="hidden" name="room_id" value="{{ room.id }}">
+                    <textarea id="message" name="message" class="form-control send-message" rows="3" onkeypress="onTextChange();" placeholder="Write a reply..."></textarea>
                 </div>
                 <div class="btn-panel">
-                    <input type="submit" value="Submit">
-                    <a href="" class="col-lg-4 text-right btn send-message-btn pull-right" role="button"><i class="fa fa-send"></i> Send Message</a>
+                    <a href="javascript:post_message()" class="col-lg-4 text-right btn send-message-btn pull-right" role="button"><i class="fa fa-send"></i> Send Message</a>
                 </div>
-            </form>
             </div>
         </div>
     </div>
 {% endblock %}
 
+{% block javascript %}
+{% include 'adminlte/lib/_scripts.html' %}
+    <script>
+        $(() => {
+            get_posts(true);
+            setInterval(get_posts, 3000);
+        });
+
+        function post_message() {
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'post_message' %}',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    room_id: '{{ room.id }}',
+                    message: $.trim($('#message').val()),
+                },
+                success: function () {
+                    $('#message').val('');
+                    get_posts(true);
+                }
+            });
+        }
+
+        function get_posts(scroll=false) {
+            $.ajax({
+                type: 'POST',
+                url: '{% url 'get_posts' %}',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    room_id: '{{ room.id }}',
+                },
+                success: function (data) {
+                    let posts = $("#posts");
+                    posts.html('');
+                    data.reverse().forEach(function (post) {
+                        posts.append(`
+                        <div class="media msg">
+                            <div class="media-body">
+                                <small class="pull-right time"><i class="fa fa-calendar"></i>  ${post.created_date} - <i class="fa fa-clock-o"></i> ${post.created_time}</small>
+                                <h5 class="media-heading">${post.author}</h5>
+                                <small class="col">${post.message}</small>
+                            </div>
+                        </div>`);
+                    });
+                    if(scroll){
+                        posts.scrollTop(posts.prop("scrollHeight"));
+                    }
+                }
+            });
+        }
+
+        function onTextChange() {
+            let key = window.event.keyCode;
+            if (key === 13) {
+                post_message();
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    </script>
+{% endblock %}

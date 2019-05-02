@@ -11,5 +11,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('<int:room_id>', views.index, name='index_room'),
     path('post_message', views.post_message, name='post_message'),
+    path('get_posts', views.get_posts, name='get_posts'),
     path('api/', include(router.urls)),
 ]
