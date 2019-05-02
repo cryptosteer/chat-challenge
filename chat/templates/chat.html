@@ -32,7 +32,7 @@
                 <div id="posts" class="box-body msg-wrap">
                 </div>
                 <div class="send-wrap">
-                    <textarea id="message" name="message" class="form-control send-message" rows="3" onkeypress="onTextChange();" placeholder="Write a reply..."></textarea>
+                    <input type="text" id="message" name="message" class="form-control send-message" onkeypress="onTextChange();" placeholder="Write a reply...">
                 </div>
                 <div class="btn-panel">
                     <a href="javascript:post_message()" class="col-lg-4 text-right btn send-message-btn pull-right" role="button"><i class="fa fa-send"></i> Send Message</a>
@@ -45,9 +45,11 @@
 {% block javascript %}
 {% include 'adminlte/lib/_scripts.html' %}
     <script>
+        let last_check = '';
         $(() => {
             get_posts(true);
             setInterval(get_posts, 3000);
+            document.getElementById("message").focus();
         });
 
         function post_message() {
@@ -59,8 +61,30 @@
                     room_id: '{{ room.id }}',
                     message: $.trim($('#message').val()),
                 },
-                success: function () {
+                beforeSend: function() {
                     $('#message').val('');
+                },
+                success: function (data) {
+                    if(data.status==='queued') {
+                        append_message(data);
+                        let interval = setInterval(function () {
+                            $.ajax({
+                                type: 'POST',
+                                url: '{% url 'command_status' %}',
+                                data: {
+                                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                                    job_id: data.job_id,
+                                },
+                                success: function (data) {
+                                    if(data.status !== 'working'){
+                                        append_message(data);
+                                        get_posts(true);
+                                        clearInterval(interval);
+                                    }
+                                }
+                            });
+                        }, 1000);
+                    }
                     get_posts(true);
                 }
             });
@@ -73,25 +97,32 @@
                 data: {
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                     room_id: '{{ room.id }}',
+                    last_check: last_check,
                 },
                 success: function (data) {
                     let posts = $("#posts");
-                    posts.html('');
-                    data.reverse().forEach(function (post) {
-                        posts.append(`
-                        <div class="media msg">
-                            <div class="media-body">
-                                <small class="pull-right time"><i class="fa fa-calendar"></i>  ${post.created_date} - <i class="fa fa-clock-o"></i> ${post.created_time}</small>
-                                <h5 class="media-heading">${post.author}</h5>
-                                <small class="col">${post.message}</small>
-                            </div>
-                        </div>`);
-                    });
+                    last_check = data.last_check;
+                    if (data.posts.length > 0) {
+                        data.posts.reverse().forEach(append_message);
+                        scroll = true;
+                    }
                     if(scroll){
                         posts.scrollTop(posts.prop("scrollHeight"));
                     }
                 }
             });
+        }
+
+        function append_message(post) {
+            let posts = $("#posts");
+            posts.append(`
+            <div class="media msg">
+                <div class="media-body">
+                    <small class="pull-right time"><i class="fa fa-calendar"></i>  ${post.created_date} - <i class="fa fa-clock-o"></i> ${post.created_time}</small>
+                    <h5 class="media-heading">${post.author}</h5>
+                    <small class="col">${post.message}</small>
+                </div>
+            </div>`);
         }
 
         function onTextChange() {

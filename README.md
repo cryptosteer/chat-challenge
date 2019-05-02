@@ -30,8 +30,13 @@ This guide is for setting up development instances.
 
 ## Usage
 
-- Chat url: /
-- User #1 user:user1 pass:chatpass1
-- User #2 user:user2 pass:chatpass2
-- To enter to backend got to: /admin/
-- Admin user credentials are user:admin pass:jobsitychallenge
+Usuarios:
+
+- user: admin pass: jobsitychallenge
+- user: user1 pass: chatpass1
+- user: user2 pass: chatpass2
+
+Urls:
+
+- Chat: /
+- Backend: /admin/
