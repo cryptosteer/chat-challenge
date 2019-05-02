@@ -10,5 +10,6 @@ router.register(r'posts', views.PostViewSet)
 urlpatterns = [
     path('', views.index, name='index'),
     path('<int:room_id>', views.index, name='index_room'),
+    path('post_message', views.post_message, name='post_message'),
     path('api/', include(router.urls)),
 ]
