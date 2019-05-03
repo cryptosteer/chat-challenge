@@ -20,8 +20,6 @@ This application should allow several users to talk in a chatroom and also to ge
 ### Urls
 - Chat: https://chat-challenge-jsteer.herokuapp.com/
 - Backend: https://chat-challenge-jsteer.herokuapp.com/admin/
-- API: https://chat-challenge-jsteer.herokuapp.com/api/
-- Worker: https://chat-challenge-jsteer.herokuapp.com/django-rq/
 
 ### Users
 - user: admin pass: jobsitychallenge
