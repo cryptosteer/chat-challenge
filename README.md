@@ -15,6 +15,19 @@ This application should allow several users to talk in a chatroom and also to ge
 - Handle messages that are not understood or any exceptions raised within the bot.
 
 
+## Demo
+
+### Urls
+- Chat: https://chat-challenge-jsteer.herokuapp.com/
+- Backend: https://chat-challenge-jsteer.herokuapp.com/admin/
+- API: https://chat-challenge-jsteer.herokuapp.com/api/
+- Worker: https://chat-challenge-jsteer.herokuapp.com/django-rq/
+
+### Users
+- user: admin pass: jobsitychallenge
+- user: user1 pass: chatpass1
+- user: user2 pass: chatpass2
+
 ## Requeriments
 
 - python 3.6.8
@@ -29,20 +42,11 @@ This guide is for setting up development instances.
 1. Create a virtual environment
 2. Clone repository
 3. Install dependencies from requirements.txt
+4. Execute ```python manage.py migrate```
+5. Execute ```python manage.py collectstatic```
 
 ## Usage
 
-1. Start redis server ``` redis-server ```
-2. Start worker managment command ``` python manage.py rqworker default ``` 
-3. Start django server ``` python manage.py runserver ```
-
-#### Users
-
-- user: admin pass: jobsitychallenge
-- user: user1 pass: chatpass1
-- user: user2 pass: chatpass2
-
-#### Urls
-
-- Chat: /
-- Backend: /admin/
+1. Start redis server ```redis-server```
+2. Start worker managment command ```python manage.py rqworker default``` 
+3. Start django server ```python manage.py runserver```
