@@ -129,4 +129,12 @@ RQ_QUEUES = {
         'PORT': 6379,
         'DB': 0,
     },
+    'heroku': {
+        'HOST': 'pearlfish.redistogo.com',
+        'PORT': 9405,
+        'DB': 0,
+        'PASSWORD': '138ed9b216c6a6ec5a8a4782bbfa0a16',
+    },
 }
+
+REDIS_SETTING = 'default'
