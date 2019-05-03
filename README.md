@@ -15,10 +15,12 @@ This application should allow several users to talk in a chatroom and also to ge
 - Handle messages that are not understood or any exceptions raised within the bot.
 
 
-## Installation
+## Requeriments
 
 - python 3.6.8
-- django 2.2 
+- django 2.2
+- djangorestframework 3.9.3
+- redis 3.2.1
 
 ## Installation
 
@@ -30,13 +32,17 @@ This guide is for setting up development instances.
 
 ## Usage
 
-Usuarios:
+1. Start redis server ``` redis-server ```
+2. Start worker managment command ``` python manage.py rqworker default ``` 
+3. Start django server ``` python manage.py runserver ```
+
+#### Users
 
 - user: admin pass: jobsitychallenge
 - user: user1 pass: chatpass1
 - user: user2 pass: chatpass2
 
-Urls:
+#### Urls
 
 - Chat: /
 - Backend: /admin/
